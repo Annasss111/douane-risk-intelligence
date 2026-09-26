@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Douane Risk Intelligence</title>
+  <link rel="stylesheet" href="/assets/styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark"><img src="/assets/Tunisia.png" alt="Tunisie" /></div>
+        <div>
+          <strong>Douane Risk</strong>
+          <span>Intelligence desk</span>
+        </div>
+      </div>
+      <div class="nav-label">Workspace</div>
+      <nav>
+        <button class="nav-item active"><span class="nav-icon">◈</span>Risk desk</button>
+        <button class="nav-item" id="network-nav"><span class="nav-icon">⌁</span>Network view</button>
+        <button class="nav-item"><span class="nav-icon">◌</span>Audit trail <em>read-only</em></button>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="status-dot"></div>
+        <div><b>Admin</b><span>Session active</span></div>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">Tunisian customs · intelligence desk</p>
+          <h1>Risk intelligence</h1>
+        </div>
+        <div class="top-actions">
+          <label class="upload-button" for="csv-input"><span>↑</span> Importer un CSV</label>
+          <input id="csv-input" type="file" accept=".csv,text/csv" />
+          <button id="demo-button" class="ghost-button">Charger l’exemple</button>
+          <button id="download-button" class="download-button" hidden>Télécharger CSV enrichi</button>
+        </div>
+      </header>
+
+      <section class="hero-strip">
+        <div>
+          <span class="live-pill"><i></i> LIVE MODEL</span>
+          <h2>Prioriser les déclarations qui méritent un regard humain.</h2>
+          <p>Le score fraude indique le risque. SHAP montre pourquoi. Le graphe révèle les liens multi-entités à examiner.</p>
+        </div>
+        <div class="model-stack">
+          <div class="model-chip"><span class="chip-check">✓</span><div><b>Fraud model</b><small>Transactional risk · active</small></div></div>
+          <div class="model-chip"><span class="chip-check">✓</span><div><b>Network intelligence</b><small>Community analysis · active</small></div></div>
+        </div>
+      </section>
+
+      <section class="metric-grid" aria-label="Résumé du risque">
+        <article class="metric-card accent"><span>Total déclarations</span><strong id="metric-total">—</strong><small id="metric-file">En attente d’un fichier</small></article>
+        <article class="metric-card"><span>À contrôler</span><strong id="metric-risky">—</strong><small>Seuil opérationnel <b id="metric-threshold">—</b></small></article>
+        <article class="metric-card"><span>Risque critique</span><strong id="metric-critical">—</strong><small>Probabilité ≥ 75%</small></article>
+        <article class="metric-card"><span>Score moyen</span><strong id="metric-average">—</strong><small>Fraud probability</small></article>
+      </section>
+
+      <section class="workspace-grid">
+        <div class="queue-panel panel">
+          <div class="panel-heading">
+            <div><span class="section-kicker">QUEUE</span><h3>Déclarations à examiner</h3></div>
+            <div class="queue-tools"><span id="record-count">0 dossiers</span><select id="risk-filter"><option value="all">Tous les niveaux</option><option value="critical">Critique</option><option value="high">Élevé</option><option value="watch">À surveiller</option><option value="low">Faible</option></select></div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Déclaration</th><th>Score fraude</th><th>Niveau</th><th>Signal dominant</th><th></th></tr></thead>
+              <tbody id="records-body"><tr><td colspan="5" class="empty-state">Importez un CSV ou chargez l’exemple pour commencer.</td></tr></tbody>
+            </table>
+          </div>
+          <div class="queue-pager"><button id="prev-page" class="pager-button" type="button" aria-label="Page précédente">←</button><span id="page-label">Page 1</span><button id="next-page" class="pager-button" type="button" aria-label="Page suivante">→</button></div>
+        </div>
+
+        <aside class="detail-panel panel">
+          <div class="detail-empty" id="detail-empty"><div class="empty-mark">✦</div><h3>Sélectionner une déclaration</h3><p>Les raisons du score et l’explication générée apparaîtront ici.</p></div>
+          <div id="detail-content" hidden>
+            <div class="detail-header"><div><span class="section-kicker">CASE FILE</span><h3 id="detail-id">—</h3></div><span id="detail-badge" class="risk-badge">—</span></div>
+            <div class="score-display"><div><span>Fraud probability</span><strong id="detail-probability">—</strong></div><div class="score-track"><i id="detail-track"></i></div></div>
+            <div class="case-stats"><div><span>ROI contrôle</span><b id="detail-roi">—</b></div><div><span>Récupération estimée</span><b id="detail-recovery">—</b></div><div><span>Risque réseau</span><b id="detail-network-risk">—</b></div></div>
+            <div class="factor-section"><div class="factor-title"><span class="positive-dot"></span><b>Pourquoi cette alerte</b><small>SHAP drivers</small></div><div id="risk-factors" class="factor-list"></div></div>
+            <div class="factor-section"><div class="factor-title"><span class="negative-dot"></span><b>Signaux modérateurs</b><small>Protective signals</small></div><div id="protective-factors" class="factor-list"></div></div>
+            <div class="factor-section"><div class="factor-title"><span class="network-dot"></span><b>Cas similaires</b><small>KNN</small></div><div id="similar-transactions" class="similar-list"></div></div>
+            <div id="similar-case-detail" class="similar-case-detail" hidden><div class="factor-title"><span class="network-dot"></span><b id="similar-case-title">Détail du cas comparable</b><small id="similar-case-severity">—</small></div><p id="similar-case-summary"></p><div id="similar-case-comparison" class="comparison-list"></div></div>
+            <button id="explain-button" class="explain-button">✦ Générer une explication analyste</button>
+            <div id="llm-output" class="llm-output" hidden></div>
+            <div id="chat-panel" class="chat-panel" hidden>
+              <div class="factor-title"><span class="network-dot"></span><b>Continuer avec l’analyste IA</b><small id="llm-source">Ollama</small></div>
+              <div id="chat-messages" class="chat-messages"></div>
+              <form id="chat-form" class="chat-form"><input id="chat-input" type="text" placeholder="Posez une question sur ce dossier..." autocomplete="off" /><button id="chat-send" type="button">Envoyer</button></form>
+            </div>
+          </div>
+        </aside>
+      </section>
+      <section class="network-section panel" id="network-section">
+        <div class="panel-heading"><div><span class="section-kicker">NETWORK INTELLIGENCE</span><h3>Connexions à examiner</h3></div><div class="network-controls"><select id="network-select" aria-label="Choisir une communauté"><option value="0">Communauté prioritaire</option></select><span id="network-status">Graphe en attente</span></div></div>
+        <div class="network-layout"><div class="network-canvas" id="network-canvas"><div class="network-empty">Chargez un fichier pour cartographier les liens entre déclarations.</div></div><div class="network-list" id="network-list"></div></div>
+      </section>
+      <footer><span>Customs intelligence desk</span><span id="api-status">Connexion au moteur...</span></footer>
+    </main>
+  </div>
+  <script src="/assets/app.js"></script>
+</body>
+</html>

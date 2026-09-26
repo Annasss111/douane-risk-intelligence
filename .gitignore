@@ -1,0 +1,23 @@
+# Python environments and caches
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Local collaborator checkout and generated training logs
+_friend_repo/
+catboost_info/
+
+# Local secrets
+.env
+
+# Generated scoring exports and explanation outputs
+*_enrichi.csv
+predictions_with_explanations*.json
+shap_explanations_test.*
+
+# Editor and OS files
+.vscode/
+.DS_Store
+Thumbs.db
